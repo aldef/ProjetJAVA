@@ -3,6 +3,10 @@
 
 Alexandre Defrène - Licence RGI - Formation initiale
 
+# Consignes générales
+
+Pour arrêter la saisie des lecteurs ou des livres, simplement appuyer sur Entrée en laissant une chaine de caractères vide.
+
 # Version 1
 
 - Lancer le projet sous IntelliJ et compiler le programme.

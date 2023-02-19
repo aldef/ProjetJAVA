@@ -14,25 +14,27 @@ public class Main {
         ResultSet resultSetLivres = null;
         ResultSet resultSetLecteurs = null;
 
-        Statement monStatement = null;
+        Statement statementLivres = null;
+        Statement statementLecteurs = null;
 
         try {
-            monStatement = connexion.createStatement();
+            statementLivres = connexion.createStatement();
+            statementLecteurs = connexion.createStatement();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
         try {
-            resultSetLivres = monStatement.executeQuery("SELECT * FROM livre;");
+            resultSetLivres = statementLivres.executeQuery("SELECT * FROM livre;");
 
             while (resultSetLivres.next()) {
-                livres.add(new Livre(resultSetLivres.getInt("id"), resultSetLivres.getString("titre"), resultSetLivres.getString("auteur")));
+                livres.add(new Livre(resultSetLivres.getString("titre"), resultSetLivres.getString("auteur")));
             }
 
-            resultSetLecteurs = monStatement.executeQuery("SELECT * FROM lecteur;");
+            resultSetLecteurs = statementLecteurs.executeQuery("SELECT * FROM lecteur;");
 
             while (resultSetLecteurs.next()) {
-                lecteurs.add(new Lecteur(resultSetLecteurs.getInt("id"), resultSetLivres.getString("prenom"), resultSetLivres.getString("nom")));
+                lecteurs.add(new Lecteur(resultSetLecteurs.getString("prenom"), resultSetLecteurs.getString("nom")));
             }
 
         } catch (SQLException e) {
@@ -46,8 +48,9 @@ public class Main {
 
     }
 
+
     public static void main(String[] args) {
-        // Initialisation des listes
+        // Initialisation des listes pour la récupération depuis la BDD
         ArrayList<Livre> livres = new ArrayList<Livre>();
         ArrayList<Lecteur> lecteurs = new ArrayList<Lecteur>();
 
@@ -78,6 +81,80 @@ public class Main {
         System.out.println("Récupération des données..");
         recupererDonnees(maConnexion, livres, lecteurs);
 
+        System.out.println();
+
+        //Réinitialisation des listes
+        lecteurs.clear();
+        livres.clear();
+
+        // Saisie des livres
+        System.out.println("Saisie des livres : ");
+        System.out.print("Entrer le titre : ");
+        Scanner scanner = new Scanner(System.in);
+        String titre = scanner.nextLine();
+        while (!titre.equals("")) {
+            System.out.print("Entrer l'auteur : ");
+            String auteur = scanner.nextLine();
+            livres.add(new Livre(titre, auteur));
+            System.out.print("Entrer le titre : ");
+            titre = scanner.nextLine();
+        }
+
+        // Saisie des lecteurs
+        System.out.println("Saisie des lecteurs : ");
+        System.out.print("Entrer le nom : ");
+        String nom = scanner.nextLine();
+        while (!nom.equals("")) {
+            System.out.print("Entrer le prenom : ");
+            String prenom = scanner.nextLine();
+            lecteurs.add(new Lecteur(nom, prenom));
+            System.out.print("Entrer le nom : ");
+            nom = scanner.nextLine();
+        }
+
+
+        Statement monStatement = null;
+
+        try {
+            monStatement = maConnexion.createStatement();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        for(Lecteur lecteur : lecteurs)
+        {
+            String requete = "INSERT INTO lecteur(nom,prenom) VALUES (" +
+                    "'"+ lecteur.getNom() + "'," +
+                    "'" + lecteur.getPrenom() + "'" +
+                    ");";
+
+            try {
+                int res = monStatement.executeUpdate(requete);
+                System.out.println("Ajout d'un lecteur : " + lecteur.getNom() + ' ' + lecteur.getPrenom());
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+
+        for(Livre livre : livres)
+        {
+            String requete = "INSERT INTO livre(titre,auteur) VALUES (" +
+                    "'"+ livre.getTitre() + "'," +
+                    "'" + livre.getAuteur() + "'" +
+                    ");";
+
+            try {
+                int res = monStatement.executeUpdate(requete);
+                System.out.println("Ajout d'un livre : " + livre.getTitre() + ' ' + livre.getAuteur());
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        //Récupération et affichage des données enregistrées en base de données
+        System.out.println("Récupération des données..");
+        recupererDonnees(maConnexion, livres, lecteurs);
 
     }
 

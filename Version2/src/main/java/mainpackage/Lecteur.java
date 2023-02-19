@@ -2,18 +2,24 @@ package mainpackage;
 
 public class Lecteur {
 
-    private int identifiant;
     private String nom;
     private String prenom;
 
-    public Lecteur(int identifiant, String nom, String prenom) {
-        this.identifiant = identifiant;
+    public String getNom() {
+        return nom;
+    }
+
+    public String getPrenom() {
+        return prenom;
+    }
+
+    public Lecteur(String nom, String prenom) {
         this.nom = nom;
         this.prenom = prenom;
     }
 
     @Override
     public String toString() {
-        return "Identifiant : " + identifiant + ", Nom : " + nom + ", Prénom : " + prenom;
+        return "Nom : " + nom + ", Prénom : " + prenom;
     }
 }

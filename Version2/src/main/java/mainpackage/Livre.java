@@ -2,18 +2,24 @@ package mainpackage;
 
 public class Livre {
 
-    private int identifiant;
     private String titre;
     private String auteur;
 
-    public Livre(int identifiant, String titre, String auteur) {
-        this.identifiant = identifiant;
+    public Livre(String titre, String auteur) {
         this.titre = titre;
         this.auteur = auteur;
     }
 
     @Override
     public String toString() {
-        return "Identifiant : " + identifiant + ", Titre : " + titre + ", Auteur : " + auteur;
+        return "Titre : " + titre + ", Auteur : " + auteur;
+    }
+
+    public String getTitre() {
+        return titre;
+    }
+
+    public String getAuteur() {
+        return auteur;
     }
 }
